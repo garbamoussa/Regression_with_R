@@ -21,4 +21,6 @@ Data science and econometric
 
 - Machine learning 
 
+- Recommendation 
+
 
