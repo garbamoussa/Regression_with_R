@@ -1,6 +1,8 @@
 ---
-title: "Regression_Linear"
+title: "Regression_Linear for africa energy data"
 ---
+
+
 
 ---
 author: "GARBA Moussa"
@@ -16,17 +18,25 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-```{r }
-remove.packages(c("caret"))
 
-```
 ```{r }
-install.packages("caret")
-install.packages("ggplot2")
-install.packages("lattice")
-install.packages("lava")
-install.packages("ggforce")
+install.packages("caret",repos = "http://cran.us.r-project.org")
+install.packages("ggplot2",repos = "http://cran.us.r-project.org")
+install.packages("lattice",repos = "http://cran.us.r-project.org")
+install.packages("lava",repos = "http://cran.us.r-project.org")
+install.packages("ggforce",repos = "http://cran.us.r-project.org")
+install.packages("mnormt",repos = "http://cran.us.r-project.org")
+install.packages("QuantPsyc", repos = "https://cran.rstudio.com/bin/windows/contrib/3.4/mnormt_1.5-5.zip")
 
+install.packages("relaimpo",repos = "http://cran.us.r-project.org")
+install.packages("rapportools",repos = "http://cran.us.r-project.org")
+
+install.packages("lm.beta",repos = "http://cran.us.r-project.org")
+install.packages("lmtest",repos = "http://cran.us.r-project.org")
+install.packages("caTools",repos = "http://cran.us.r-project.org")
+install.packages("unmarked",repos = "http://cran.us.r-project.org")
+
+install.packages("lmSupport",repos = "http://cran.us.r-project.org")
 ```
 
 ```{r }
@@ -48,8 +58,15 @@ library(ggplot2)
 library(lattice)
 library(lava)
 library(caret)
-
-
+library(MASS)
+library(rapportools)
+library(caTools)
+library(unmarked)
+library(lm.beta)
+library(lmtest)
+library(DAAG)
+library(relaimpo)
+library(lmSupport)
 
 ```
 # Regression linéaire 
@@ -164,7 +181,7 @@ highlyCorCol
 
 
 #Remove highly correlated variables and create a new dataset
-dat3 = mtcars[, -which(colnames(mtcars) %in% highlyCorCol)]
+dat3 = data[, -which(colnames(data) %in% highlyCorCol)]
 dim(dat3)
 
 
@@ -201,7 +218,13 @@ BIC(fit)
 ```
 
 
+
+
+
+
 ```{r }
+
+data<-na.omit(data)
 step <- stepAIC(fit, direction="both")
 summary(step)
 
@@ -230,38 +253,71 @@ summary(stepBIC)
 
 
 ```{r }
-
+lm.beta(stepBIC)
 #Autocorrelation Test
+library(car)
 durbinWatsonTest(stepBIC)
 
+```
+
+```{r }
 #Normality Of Residuals (Should be > 0.05)
 res=residuals(stepBIC,type="pearson")
 shapiro.test(res)
+```
+
+
+```{r }
 
 #Testing for heteroscedasticity (Should be > 0.05)
 ncvTest(stepBIC)
-
-#Outliers – Bonferonni test
-outlierTest(stepBIC)
-
-#See Residuals
-resid = residuals(stepBIC)
-
-#Relative Importance
-install.packages("relaimpo")
-library(relaimpo)
-calc.relimp(stepBIC)
 
 ```
 
 
 ```{r }
+#Outliers – Bonferonni test
+outlierTest(stepBIC)
+
+```
+
+```{r }
+#See Residuals
+resid = residuals(stepBIC)
+
+
+```
+
+
+
+
+
+```{r }
+#Relative Importance
+
+calc.relimp(stepBIC)
+
+```
+
+```{r }
+
+#See Predicted Value
+pred = predict(stepBIC,data)
+#See Actual vs. Predicted Value
+finaldata = cbind(data,pred)
+print(head(subset(finaldata, select = c(Creditex,pred))))
+
+```
+
+
+
+```{r }
 #Calculating RMSE
-rmse = sqrt(mean((dat3$mpg - pred)^2))
+rmse = sqrt(mean((dat3$Creditex - pred)^2))
 print(rmse)
 
 #Calculating Rsquared manually
-y = dat3[,c("mpg")]
+y = dat3[,c("Creditex")]
 R.squared = 1 - sum((y-pred)^2)/sum((y-mean(y))^2)
 print(R.squared)
 
@@ -272,36 +328,13 @@ adj.r.squared = 1 - (1 - R.squared) * ((n - 1)/(n-p-1))
 print(adj.r.squared)
 
 #Box Cox Transformation
-library(lmSupport)
-modelBoxCox(stepBIC)
+
+#modelBoxCox(stepBIC)
 ```
 
 ```{r }
 #K-fold cross-validation
-library(DAAG)
-kfold = cv.lm(data=dat3, stepBIC, m=5)
+
+#kfold = cv.lm(data=dat3, stepBIC, m=5)
 ```
-
-```{r }
-
-```
-
-
-```{r }
-
-```
-
-
-```{r }
-
-```
-
-
-```{r }
-
-```
-
-
-
-
 

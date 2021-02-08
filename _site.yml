@@ -5,8 +5,8 @@ navbar:
   left:
   - text: "Home"
    href: index.html
-  - text: "Regression Linear"
-   href: Linear_regression.html
+  - text: "Regression Linearfor Africa energy"
+   href: Linear_regression_Africa_energy.html
 output:
   html_document:
  theme: cosmo
