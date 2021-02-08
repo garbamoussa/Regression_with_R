@@ -24,3 +24,4 @@ Data science and econometric
 - Recommendation 
 
 
+- ethic 
