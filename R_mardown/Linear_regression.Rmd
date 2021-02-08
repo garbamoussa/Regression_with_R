@@ -1,11 +1,8 @@
 ---
 title: "Regression_Linear"
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
- 
+---
+
+---
 author: "GARBA Moussa"
 date: "2/7/2021"
 output: html_document

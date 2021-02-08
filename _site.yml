@@ -1,0 +1,12 @@
+name: "Regression_R"
+output_dir: "docs"
+navbar:
+  title: "Regression_Linear"
+  left:
+  - text: "Home"
+   href: index.html
+  - text: "Regression Linear"
+   href: Linear_regression.html
+output:
+  html_document:
+ theme: cosmo
