@@ -1,0 +1,17 @@
+name: "Regression_R"
+output_dir: "docs"
+navbar:
+  title: "Regression_Linear"
+  left:
+  - text: "Home"
+   href: index.html
+<<<<<<< HEAD
+  - text: "Regression Linear"
+   href: Linear_regression.html
+=======
+  - text: "Regression Linearfor Africa energy"
+   href: Linear_regression_Africa_energy.html
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+output:
+  html_document:
+ theme: cosmo

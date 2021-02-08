@@ -1,0 +1,442 @@
+---
+<<<<<<< HEAD
+title: "Regression_Linear"
+---
+
+=======
+title: "Regression_Linear for africa energy data"
+---
+
+
+
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+---
+author: "GARBA Moussa"
+date: "2/7/2021"
+output: html_document
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+<<<<<<< HEAD
+```{r }
+remove.packages(c("caret"))
+
+```
+```{r }
+install.packages("caret")
+install.packages("ggplot2")
+install.packages("lattice")
+install.packages("lava")
+install.packages("ggforce")
+
+=======
+
+```{r }
+install.packages("caret",repos = "http://cran.us.r-project.org")
+install.packages("ggplot2",repos = "http://cran.us.r-project.org")
+install.packages("lattice",repos = "http://cran.us.r-project.org")
+install.packages("lava",repos = "http://cran.us.r-project.org")
+install.packages("ggforce",repos = "http://cran.us.r-project.org")
+install.packages("mnormt",repos = "http://cran.us.r-project.org")
+install.packages("QuantPsyc", repos = "https://cran.rstudio.com/bin/windows/contrib/3.4/mnormt_1.5-5.zip")
+
+install.packages("relaimpo",repos = "http://cran.us.r-project.org")
+install.packages("rapportools",repos = "http://cran.us.r-project.org")
+
+install.packages("lm.beta",repos = "http://cran.us.r-project.org")
+install.packages("lmtest",repos = "http://cran.us.r-project.org")
+install.packages("caTools",repos = "http://cran.us.r-project.org")
+install.packages("unmarked",repos = "http://cran.us.r-project.org")
+
+install.packages("lmSupport",repos = "http://cran.us.r-project.org")
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+```
+
+```{r }
+library(tidyverse)
+library(readr)
+library(data.table)
+library(DataExplorer)
+
+library(tidyr)
+library(broom)
+
+library(stringr)
+library(lubridate)
+library(ggforce)
+library(reshape2)
+
+library(corrplot)
+library(ggplot2)
+library(lattice)
+library(lava)
+library(caret)
+<<<<<<< HEAD
+
+
+=======
+library(MASS)
+library(rapportools)
+library(caTools)
+library(unmarked)
+library(lm.beta)
+library(lmtest)
+library(DAAG)
+library(relaimpo)
+library(lmSupport)
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+
+```
+# Regression linéaire 
+
+
+```{r }
+#data <-  read.table("/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv", header=TRUE, sep=";",  comment.char="#",  na.strings="NA", stringsAsFactors=FALSE, quote="", fill=FALSE)
+
+#data <- read_csv("/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv", col_names = "TRUE",locale = default_locale(), quote = ";", na =c("", "NA"))
+
+
+#data1 <-  read.table("/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data1.csv", header=TRUE,sep=";", comment.char="#", na.strings=".", stringsAsFactors=FALSE) 
+
+#data <- read.table("/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv", header=TRUE, sep=";", quote="\\", fill=TRUE)
+```
+
+
+```{r }
+#x = readLines('/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv')
+#y = gsub('","', "','", x) # replace double quotes for each field
+#y = gsub('^"|"$', "'", y) # replace trailing and leading double quotes
+#z = paste(y, collapse='\n') # turn it back into a table for fread to read
+#df = fread(z, quote="'")
+#df
+
+
+```
+
+```{r }
+
+
+#data<- fread("/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv",  header = TRUE, sep = ";",quote = "")
+
+
+#data<-  read.csv("/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv",header = TRUE, sep = ";" ,row.names = NULL, comment.char = "",stringsAsFactors = FALSE, colClasses= "character", encoding="utf-8", quote = "")
+
+
+#data <- fread('/Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv', cmd="sed s/","/','/g;s/^"|"$/'/g /Users/garbamoussa/Desktop/Bureau/R/Regressions_energy_data/Data_source/Data.csv")
+
+## les premières importation attribuent "" à certaines colonnes 
+data <- read_csv2("/Users/garbamoussa/Desktop/Bureau/R/Regression_with_R/Data_source/Data.csv",locale=locale("sv",encoding="ISO-8859-1"), quote="")
+
+```
+
+
+```{r }
+str(data)
+
+```
+
+
+```{r }
+head(data)
+```
+
+```{r }
+summary(data)
+```
+
+
+```{r }
+data$cn   = as.factor(data$cn)
+```
+
+
+```{r }
+
+```
+
+
+
+
+```{r }
+# supprimer la variable dépendante pour le calcul de la multicolnéarité 
+df = subset(data, select = -c(Creditex))
+
+# Identifier les variables numériques 
+numericData <- df[sapply(df, is.numeric)]
+
+#Calcul de la corrélation 
+descrCor <- cor(numericData, use="pairwise.complete.obs")
+#descrCor <-  max(descrCor,na.rm=TRUE)
+# Afficher la matrice de corrélation
+print(descrCor)
+```
+
+
+
+```{r }
+# Visualize Correlation Matrix
+corrplot(descrCor, order = "FPC", method="number", type = "lower", tl.cex = 0.7, tl.col = rgb(0, 0, 0))
+
+
+#corrplot(cor(df), order = "FPC", method = "color", type = "lower", tl.cex = 0.7, tl.col = rgb(0, 0, 0))
+```
+
+```{r }
+
+
+corrplot(descrCor, type="upper", order="hclust", tl.col="black", tl.srt=45)
+```
+
+```{r }
+# Checking Variables that are highly correlated
+highlyCorrelated = findCorrelation(descrCor, cutoff=0.7)
+
+#Identifying Variable Names of Highly Correlated Variables
+highlyCorCol = colnames(numericData)[highlyCorrelated]
+
+#Print highly correlated attributes
+highlyCorCol
+
+
+#Remove highly correlated variables and create a new dataset
+<<<<<<< HEAD
+dat3 = mtcars[, -which(colnames(mtcars) %in% highlyCorCol)]
+=======
+dat3 = data[, -which(colnames(data) %in% highlyCorCol)]
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+dim(dat3)
+
+
+
+```
+
+```{r }
+#Build Linear Regression Model
+fit = lm(Creditex ~ ., data=data)
+
+#Check Model Performance
+summary(fit)
+
+#Extracting Coefficients
+summary(fit)$coeff
+anova(fit)
+
+par(mfrow=c(2,2))
+plot(fit)
+```
+
+```{r }
+
+anova(fit)
+```
+
+
+```{r }
+
+summary(fit)$r.squared
+summary(fit)$adj.r.squared
+AIC(fit)
+BIC(fit)
+```
+
+
+<<<<<<< HEAD
+```{r }
+=======
+
+
+
+
+```{r }
+
+data<-na.omit(data)
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+step <- stepAIC(fit, direction="both")
+summary(step)
+
+
+```
+
+
+```{r }
+step <- stepAIC(fit, direction="backward")
+summary(step)
+
+```
+
+```{r }
+step <- stepAIC(fit, direction="forward")
+summary(step)
+```
+
+
+```{r }
+#Stepwise Selection with BIC
+n = dim(data)[1]
+stepBIC = stepAIC(fit,k=log(n))
+summary(stepBIC)
+```
+
+
+```{r }
+<<<<<<< HEAD
+
+#Autocorrelation Test
+durbinWatsonTest(stepBIC)
+
+#Normality Of Residuals (Should be > 0.05)
+res=residuals(stepBIC,type="pearson")
+shapiro.test(res)
+=======
+lm.beta(stepBIC)
+#Autocorrelation Test
+library(car)
+durbinWatsonTest(stepBIC)
+
+```
+
+```{r }
+#Normality Of Residuals (Should be > 0.05)
+res=residuals(stepBIC,type="pearson")
+shapiro.test(res)
+```
+
+
+```{r }
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+
+#Testing for heteroscedasticity (Should be > 0.05)
+ncvTest(stepBIC)
+
+<<<<<<< HEAD
+#Outliers – Bonferonni test
+outlierTest(stepBIC)
+
+#See Residuals
+resid = residuals(stepBIC)
+
+#Relative Importance
+install.packages("relaimpo")
+library(relaimpo)
+=======
+```
+
+
+```{r }
+#Outliers – Bonferonni test
+outlierTest(stepBIC)
+
+```
+
+```{r }
+#See Residuals
+resid = residuals(stepBIC)
+
+
+```
+
+
+
+
+
+```{r }
+#Relative Importance
+
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+calc.relimp(stepBIC)
+
+```
+
+<<<<<<< HEAD
+
+```{r }
+#Calculating RMSE
+rmse = sqrt(mean((dat3$mpg - pred)^2))
+print(rmse)
+
+#Calculating Rsquared manually
+y = dat3[,c("mpg")]
+=======
+```{r }
+
+#See Predicted Value
+pred = predict(stepBIC,data)
+#See Actual vs. Predicted Value
+finaldata = cbind(data,pred)
+print(head(subset(finaldata, select = c(Creditex,pred))))
+
+```
+
+
+
+```{r }
+#Calculating RMSE
+rmse = sqrt(mean((dat3$Creditex - pred)^2))
+print(rmse)
+
+#Calculating Rsquared manually
+y = dat3[,c("Creditex")]
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
+R.squared = 1 - sum((y-pred)^2)/sum((y-mean(y))^2)
+print(R.squared)
+
+#Calculating Adj. Rsquared manually
+n = dim(dat3)[1]
+p = dim(summary(stepBIC)$coeff)[1] - 1
+adj.r.squared = 1 - (1 - R.squared) * ((n - 1)/(n-p-1))
+print(adj.r.squared)
+
+#Box Cox Transformation
+<<<<<<< HEAD
+library(lmSupport)
+modelBoxCox(stepBIC)
+```
+
+```{r }
+#K-fold cross-validation
+library(DAAG)
+kfold = cv.lm(data=dat3, stepBIC, m=5)
+```
+
+```{r }
+
+```
+
+
+```{r }
+
+```
+
+
+```{r }
+
+```
+
+
+```{r }
+
+```
+
+
+
+
+
+=======
+
+#modelBoxCox(stepBIC)
+```
+
+```{r }
+#K-fold cross-validation
+
+#kfold = cv.lm(data=dat3, stepBIC, m=5)
+```
+
+>>>>>>> cf13c2484631150564c08cdf77d5417048848c98
