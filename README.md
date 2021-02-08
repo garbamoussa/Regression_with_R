@@ -9,3 +9,16 @@ GARBA Moussa, PhD<br>
 
 
 <h2>Research Question</h2>
+
+Data science and econometric 
+
+- Data exploration 
+
+
+- econometric 
+
+- Data science 
+
+- Machine learning 
+
+
